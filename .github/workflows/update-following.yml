@@ -1,0 +1,24 @@
+name: Update Following Count
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get Following Count
+        run: |
+          FOLLOWING=$(curl -s "https://api.github.com/users/JustFollowThem" | jq -r '.following')
+          sed -i "s/<!-- FOLLOWING_COUNT -->N/A<!-- FOLLOWING_COUNT -->/<!-- FOLLOWING_COUNT -->$FOLLOWING<!-- FOLLOWING_COUNT -->/g" README.md
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Update following count"
+          git push
