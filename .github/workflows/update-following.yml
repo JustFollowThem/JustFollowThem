@@ -1,8 +1,8 @@
 name: Update Following Count
 on:
   schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+    - cron: "0 0 * * *"  # 每天更新一次
+  workflow_dispatch:  # 支持手动触发
 
 jobs:
   update:
@@ -10,10 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Get Following Count
         run: |
           FOLLOWING=$(curl -s "https://api.github.com/users/JustFollowThem" | jq -r '.following')
-          sed -i "s/<!-- FOLLOWING_COUNT -->N/A<!-- FOLLOWING_COUNT -->/<!-- FOLLOWING_COUNT -->$FOLLOWING<!-- FOLLOWING_COUNT -->/g" README.md
+          sed -i "s#<!-- FOLLOWING_COUNT -->N/A<!-- FOLLOWING_COUNT -->#<!-- FOLLOWING_COUNT -->$FOLLOWING<!-- FOLLOWING_COUNT -->#g" README.md
 
       - name: Commit Changes
         run: |
