@@ -19,8 +19,10 @@ jobs:
         run: |
           FOLLOWING=$(curl -s "https://api.github.com/users/JustFollowThem" | jq -r '.following')
           CURRENT_TIME=$(date +"%Y-%m-%d %H:%M:%S")
+          CST_TIME=$(TZ='Asia/Shanghai' date +"%Y-%m-%d %H:%M:%S")
           sed -i "s#<!-- FOLLOWING_COUNT -->.*<!-- FOLLOWING_COUNT -->#<!-- FOLLOWING_COUNT -->$FOLLOWING<!-- FOLLOWING_COUNT -->#g" README.md
           sed -i "s#<!-- LAST_UPDATED -->.*<!-- LAST_UPDATED -->#<!-- LAST_UPDATED -->$CURRENT_TIME<!-- LAST_UPDATED -->#g" README.md
+          sed -i "s#<!-- LAST_UPDATED_CST -->.*<!-- LAST_UPDATED_CST -->#<!-- LAST_UPDATED_CST -->$CST_TIME<!-- LAST_UPDATED_CST -->#g" README.md
           
       - name: Commit Changes
         run: |
